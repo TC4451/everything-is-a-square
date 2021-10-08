@@ -9,6 +9,12 @@ blue = pygame.Color(0, 0, 255)
 black = pygame.Color(0, 0, 0)
 white = pygame.Color(255, 255, 255)
 
+left_key = False
+right_key = False
+up_key = False 
+down_key = False
+
+x = game_width / 2
 
 pygame.init()
 game_display = pygame.display.set_mode((game_width, game_height))
@@ -24,9 +30,34 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                left_key = True
+            elif event.key == pygame.K_RIGHT:
+                right_key = True
+            elif event.key == pygame.K_UP:
+                up_key = True
+            elif event.key == pygame.K_DOWN:
+                down_key = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                left_key = False
+            elif event.key == pygame.K_RIGHT:
+                right_key = False
+            elif event.key == pygame.K_UP:
+                up_key = False
+            elif event.key == pygame.K_DOWN:
+                down_key = False
 
-    draw_square(red, 20, 20, 30)
 
+    if left_key:
+        x -= 1
+    
+
+    game_display.fill(white)
+    draw_square(red, x, 20, 30)
+
+    
     pygame.display.update()
     clock.tick(60)
     
