@@ -17,6 +17,12 @@ down_key = False
 x = game_width / 2
 y = game_height / 2
 
+x_accel = 0.1
+y_accel = 0.1
+
+x_speed = 0
+y_speed = 0
+
 pygame.init()
 game_display = pygame.display.set_mode((game_width, game_height))
 pygame.display.set_caption('Everything-is-a-square')
@@ -51,17 +57,22 @@ while True:
                 down_key = False
 
 
+    # If a key is pressed, accelerate in the direction of the key
     if left_key:
-        x -= 1
+        x_speed -= x_accel
 
     if right_key:
-        x += 1
+        x_speed += x_accel
 
     if up_key:
-        y -= 1
+        y_speed -= y_accel
     
     if down_key:
-        y += 1
+        y_speed += y_accel
+
+    # Add speed t square position
+    x += x_speed
+    y += y_speed
     
 
     game_display.fill(white)
