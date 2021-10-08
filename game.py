@@ -1,7 +1,7 @@
 import pygame
 
-game_height = 900
-game_width = 1600
+game_height = 600
+game_width = 500
 
 red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 200, 0)
@@ -15,6 +15,7 @@ up_key = False
 down_key = False
 
 x = game_width / 2
+y = game_height / 2
 
 pygame.init()
 game_display = pygame.display.set_mode((game_width, game_height))
@@ -52,10 +53,19 @@ while True:
 
     if left_key:
         x -= 1
+
+    if right_key:
+        x += 1
+
+    if up_key:
+        y -= 1
+    
+    if down_key:
+        y += 1
     
 
     game_display.fill(white)
-    draw_square(red, x, 20, 30)
+    draw_square(red, x, y, 30)
 
     
     pygame.display.update()
