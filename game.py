@@ -86,8 +86,18 @@ while True:
         y_speed -= deccel
     elif y_speed < 0:
         y_speed += deccel
-        
+
+    #Handle hitting walls
+    if x < 0:
+        x = 0
+    elif x > (game_width - square_size):
+        x = game_width - square_size
     
+    if y < 0:
+        y = 0
+    elif y > (game_height - square_size):
+        y = game_height - square_size
+
     game_display.fill(white)
     draw_square(red, x, y, square_size)
 
