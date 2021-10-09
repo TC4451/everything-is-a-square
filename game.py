@@ -35,6 +35,8 @@ def draw_square(color, x, y, size):
 
 
 while True:
+    
+    # Handle key presses
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -57,7 +59,6 @@ while True:
                 up_key = False
             elif event.key == pygame.K_DOWN:
                 down_key = False
-
 
     # If a key is pressed, accelerate in the direction of the key
     if left_key:
@@ -90,11 +91,11 @@ while True:
     if abs(y_speed) < 0.3:
         y_speed = 0
 
-     # Add speed to square position
+    # Add speed to player position
     x += x_speed
     y += y_speed
 
-    #Handle hitting walls
+    # Handle hitting walls
     if x < 0:
         x = 0
     elif x > (game_width - square_size):
@@ -105,8 +106,10 @@ while True:
     elif y > (game_height - square_size):
         y = game_height - square_size
 
-    
+    # Background
     game_display.fill(white)
+
+    # Draw player square
     draw_square(red, x, y, square_size)
 
     
