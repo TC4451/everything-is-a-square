@@ -3,6 +3,8 @@ import pygame
 game_height = 600
 game_width = 500
 
+square_size = 30
+
 red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 200, 0)
 blue = pygame.Color(0, 0, 255)
@@ -17,8 +19,8 @@ down_key = False
 x = game_width / 2
 y = game_height / 2
 
-x_accel = 0.1
-y_accel = 0.1
+accel = 0.6
+deccel = 0.3
 
 x_speed = 0
 y_speed = 0
@@ -59,24 +61,35 @@ while True:
 
     # If a key is pressed, accelerate in the direction of the key
     if left_key:
-        x_speed -= x_accel
+        x_speed -= accel
 
     if right_key:
-        x_speed += x_accel
+        x_speed += accel
 
     if up_key:
-        y_speed -= y_accel
+        y_speed -= accel
     
     if down_key:
-        y_speed += y_accel
+        y_speed += accel
 
     # Add speed t square position
     x += x_speed
     y += y_speed
     
+    # Subtract decceleration
+    if x_speed > 0:
+        x_speed -= deccel
+    elif x_speed < 0:
+        x_speed += deccel
 
+    if y_speed > 0:
+        y_speed -= deccel
+    elif y_speed < 0:
+        y_speed += deccel
+        
+    
     game_display.fill(white)
-    draw_square(red, x, y, 30)
+    draw_square(red, x, y, square_size)
 
     
     pygame.display.update()
