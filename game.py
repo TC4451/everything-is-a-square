@@ -71,10 +71,6 @@ while True:
     
     if down_key:
         y_speed += accel
-
-    # Add speed t square position
-    x += x_speed
-    y += y_speed
     
     # Subtract decceleration
     if x_speed > 0:
@@ -87,6 +83,17 @@ while True:
     elif y_speed < 0:
         y_speed += deccel
 
+    # Avoid drift
+    if abs(x_speed) < 0.3:
+        x_speed = 0
+    
+    if abs(y_speed) < 0.3:
+        y_speed = 0
+
+     # Add speed to square position
+    x += x_speed
+    y += y_speed
+
     #Handle hitting walls
     if x < 0:
         x = 0
@@ -98,6 +105,7 @@ while True:
     elif y > (game_height - square_size):
         y = game_height - square_size
 
+    
     game_display.fill(white)
     draw_square(red, x, y, square_size)
 
