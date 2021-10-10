@@ -85,10 +85,10 @@ while True:
         y_speed += deccel
 
     # Avoid drift
-    if abs(x_speed) < 0.3:
+    if abs(x_speed) < deccel:
         x_speed = 0
     
-    if abs(y_speed) < 0.3:
+    if abs(y_speed) < deccel:
         y_speed = 0
 
     # Add speed to player position
