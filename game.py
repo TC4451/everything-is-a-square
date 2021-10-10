@@ -25,6 +25,17 @@ deccel = 0.3
 x_speed = 0
 y_speed = 0
 
+map = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1],
+    [0, 1, 0, 1, 1],
+    ]
+
+
+
 pygame.init()
 game_display = pygame.display.set_mode((game_width, game_height))
 pygame.display.set_caption('Everything-is-a-square')
@@ -32,6 +43,15 @@ clock = pygame.time.Clock()
 
 def draw_square(color, x, y, size):
         pygame.draw.rect(game_display, color, [x, y, size, size])
+
+def draw_map(map):
+    for y, row in enumerate(map):
+        for x, block in enumerate(row):
+            if block == 1:
+                x_pos = x * 100
+                y_pos = y * 100
+                draw_square(black, x_pos, y_pos, 100)
+            
 
 
 while True:
@@ -108,6 +128,9 @@ while True:
 
     # Background
     game_display.fill(white)
+
+    # Draw the blocks
+    draw_map(map)
 
     # Draw player square
     draw_square(red, x, y, square_size)
