@@ -1,4 +1,5 @@
 import pygame
+import math
 
 game_height = 600
 game_width = 500
@@ -16,8 +17,11 @@ right_key = False
 up_key = False 
 down_key = False
 
-x = game_width / 2
-y = game_height / 2
+player_x = game_width / 2
+player_y = game_height / 2
+
+previous_x = player_x
+previous_y = player_y
 
 accel = 0.6
 deccel = 0.3
@@ -26,14 +30,14 @@ x_speed = 0
 y_speed = 0
 
 map = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1],
-    [0, 1, 0, 1, 1],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0]
     ]
-
 
 
 pygame.init()
@@ -51,7 +55,56 @@ def draw_map(map):
                 x_pos = x * 100
                 y_pos = y * 100
                 draw_square(black, x_pos, y_pos, 100)
-            
+                
+def highlight_block():
+    block_index_x = math.floor(player_x / 100)
+    block_index_y = math.floor(player_y / 100)
+    draw_square(green, block_index_x * 100, block_index_y * 100, 100)
+    draw_square(red, block_index_x * 100, (block_index_y - 1) * 100, 100)
+    draw_square(red, (block_index_x - 1) * 100, block_index_y * 100, 100)
+
+
+def check_collision():
+    global player_x
+    global player_y
+    global x_speed
+    global y_speed
+    # need global because we are updating a global varaible
+
+    block_index_x = math.floor(previous_x / 100)
+    block_index_y = math.floor(previous_y / 100)    
+    left_block_x_index = block_index_x - 1
+    top_block_y_index = block_index_y - 1
+    right_block_x_index = block_index_x + 1
+    bottom_block_y_index = block_index_y + 1
+    print(f"block index y is {block_index_y}, left_block_x_index is {left_block_x_index}, map[block_index_y][left_block_x_index] is {map[block_index_y][left_block_x_index]}")
+    
+    # checking the left block
+    if map[block_index_y][left_block_x_index] == 1:
+        if player_x < block_index_x * 100:
+            player_x = block_index_x * 100
+            x_speed = 0
+    
+    # checking the top block
+    if map[top_block_y_index][block_index_x] == 1:
+        if player_y < block_index_y * 100:
+            player_y = block_index_y * 100
+            y_speed = 0
+
+    # checking the right block
+    if map[block_index_y][right_block_x_index] == 1:
+        if player_x > right_block_x_index * 100 - square_size:
+            player_x = right_block_x_index * 100 - square_size
+            x_speed = 0
+    
+    
+    # checking the bottom block
+    if map[bottom_block_y_index][block_index_x] == 1:
+        if player_y > bottom_block_y_index * 100 - square_size:
+            player_y = bottom_block_y_index * 100 - square_size
+            y_speed = 0
+
+
 
 
 while True:
@@ -111,29 +164,37 @@ while True:
     if abs(y_speed) < deccel:
         y_speed = 0
 
+    previous_x = player_x
+    previous_y = player_y
+
     # Add speed to player position
-    x += x_speed
-    y += y_speed
+    player_x += x_speed
+    player_y += y_speed
 
     # Handle hitting walls
-    if x < 0:
-        x = 0
-    elif x > (game_width - square_size):
-        x = game_width - square_size
+    if player_x < 0:
+        player_x = 0
+    elif player_x > (game_width - square_size):
+        player_x = game_width - square_size
     
-    if y < 0:
-        y = 0
-    elif y > (game_height - square_size):
-        y = game_height - square_size
+    if player_y < 0:
+        player_y = 0
+    elif player_y > (game_height - square_size):
+        player_y = game_height - square_size
 
+    
+    check_collision()
+    
     # Background
     game_display.fill(white)
 
     # Draw the blocks
     draw_map(map)
 
+    highlight_block()
+
     # Draw player square
-    draw_square(red, x, y, square_size)
+    draw_square(red, player_x, player_y, square_size)
 
     
     pygame.display.update()
