@@ -31,7 +31,7 @@ y_speed = 0
 
 map = [
     [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 0],
@@ -60,9 +60,15 @@ def highlight_block():
     block_index_x = math.floor(player_x / 100)
     block_index_y = math.floor(player_y / 100)
     draw_square(green, block_index_x * 100, block_index_y * 100, 100)
-    draw_square(red, block_index_x * 100, (block_index_y - 1) * 100, 100)
-    draw_square(red, (block_index_x - 1) * 100, block_index_y * 100, 100)
-
+    # draw_square(red, block_index_x * 100, (block_index_y - 1) * 100, 100)
+    # draw_square(red, (block_index_x - 1) * 100, block_index_y * 100, 100)
+    
+    # top right block
+    draw_square(red, (block_index_x + 1) * 100, (block_index_y - 1) * 100, 100)
+    # bottom left block
+    draw_square(red, (block_index_x - 1) * 100, (block_index_y + 1) * 100, 100)
+    # bottom right block
+    draw_square(red, (block_index_x + 1) * 100, (block_index_y + 1) * 100, 100)
 
 def check_collision():
     global player_x
@@ -77,7 +83,7 @@ def check_collision():
     top_block_y_index = block_index_y - 1
     right_block_x_index = block_index_x + 1
     bottom_block_y_index = block_index_y + 1
-    print(f"block index y is {block_index_y}, left_block_x_index is {left_block_x_index}, map[block_index_y][left_block_x_index] is {map[block_index_y][left_block_x_index]}")
+    # print(f"block index y is {block_index_y}, left_block_x_index is {left_block_x_index}, map[block_index_y][left_block_x_index] is {map[block_index_y][left_block_x_index]}")
     
     # checking the left block
     if map[block_index_y][left_block_x_index] == 1:
@@ -93,19 +99,45 @@ def check_collision():
 
     # checking the right block
     if map[block_index_y][right_block_x_index] == 1:
-        if player_x > right_block_x_index * 100 - square_size:
+        if player_x >= right_block_x_index * 100 - square_size:
             player_x = right_block_x_index * 100 - square_size
             x_speed = 0
     
     
     # checking the bottom block
     if map[bottom_block_y_index][block_index_x] == 1:
-        if player_y > bottom_block_y_index * 100 - square_size:
+        if player_y >= bottom_block_y_index * 100 - square_size:
             player_y = bottom_block_y_index * 100 - square_size
             y_speed = 0
 
+            
+    # checking the top right corner
+    if map[top_block_y_index][right_block_x_index] == 1: 
+        if player_y < block_index_y * 100:
+            if player_x >= right_block_x_index * 100 - square_size:
+                player_y = block_index_y * 100
+                y_speed = 0
+    
+    # checking the bottom left corner
+    if map[bottom_block_y_index][left_block_x_index] == 1: 
+        if player_y >= bottom_block_y_index * 100 - square_size:
+            if player_x < block_index_x * 100:
+                player_x = block_index_x * 100
+                x_speed = 0 
 
-
+    # checking the bottom right corner
+    if map[bottom_block_y_index][right_block_x_index] == 1: 
+        if player_y > bottom_block_y_index * 100 - square_size:
+            if player_x >= right_block_x_index * 100 - square_size:
+                # checks if moving right
+                if previous_x <= right_block_x_index * 100 - square_size:
+                    player_x = right_block_x_index * 100 - square_size
+                    x_speed = 0 
+                # checks if moving down
+                if previous_y <= bottom_block_y_index * 100 - square_size:
+                    player_y = bottom_block_y_index * 100 - square_size
+                    y_speed = 0
+        # print(f"player_y:{player_y} previous_y: {previous_y} bottom_block_y_index * 100 - square_size: {bottom_block_y_index * 100 - square_size}")
 
 while True:
     
@@ -191,7 +223,8 @@ while True:
     # Draw the blocks
     draw_map(map)
 
-    highlight_block()
+    # helped with debugging collision
+    # highlight_block()
 
     # Draw player square
     draw_square(red, player_x, player_y, square_size)
